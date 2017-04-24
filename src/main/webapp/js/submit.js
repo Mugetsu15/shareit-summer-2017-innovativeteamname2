@@ -9,7 +9,6 @@
  * This function is used for transfer of new book info.
  */
 var submitNewBook = function() {
-	console.log("Test")
 	var json = JSON.stringify({
 			title: $("input[name=title]").val(),
 			author: $("input[name=author]").val(),

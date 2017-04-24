@@ -27,7 +27,7 @@ public class MediaResource {
 	@POST
 	@Path("/books")
 	@Consumes(MediaType.APPLICATION_JSON)
-	Response createBook(Book book)  {
+	public Response createBook(Book book)  {
 		return null;
 	}
 	
