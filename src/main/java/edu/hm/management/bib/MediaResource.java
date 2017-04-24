@@ -1,6 +1,10 @@
 package edu.hm.management.bib;
 
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import edu.hm.management.media.Book;
@@ -11,6 +15,7 @@ import edu.hm.management.media.Disc;
  * @author Daniel Gabl
  *
  */
+@Path("/media")
 public class MediaResource {
 	
 	/**
@@ -18,6 +23,10 @@ public class MediaResource {
 	 * @param book Book to create.
 	 * @return JSON response.
 	 */
+	
+	@POST
+	@Path("/books")
+	@Consumes(MediaType.APPLICATION_JSON)
 	Response createBook(Book book)  {
 		return null;
 	}

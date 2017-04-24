@@ -9,6 +9,7 @@
  * This function is used for transfer of new book info.
  */
 var submitNewBook = function() {
+	console.log("Test")
 	var json = JSON.stringify({
 			title: $("input[name=title]").val(),
 			author: $("input[name=author]").val(),
@@ -37,6 +38,39 @@ var submitNewBook = function() {
 }
 
 /**
+ * This function is used for transfer of new book info.
+ */
+var submitNewDisc = function() {
+	var json = JSON.stringify({
+			title: $("input[name=title]").val(),
+			director: $("input[name=director]").val(),
+			barcode: $("input[name=barcode]").val(),
+			fsk: $("input[name=fsk]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/discs/',
+        type:'POST',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			$("input[name=title]").val(""),
+			$("input[name=director]").val(""),
+			$("input[name=barcode]").val(""),
+			$("input[name=fsk]").val("")
+        	
+        	errorText.removeClass("visible");
+        	errorText.addClass("hidden");
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
+
+/**
  * Creates a list of all books using a Mustache-template.
  */
 var listBooks = function() {
@@ -46,6 +80,22 @@ var listBooks = function() {
 	})
 	.done((data) => {
 		var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{title}}</td><td>{{author}}</td><td>{{isbn}}</td></tr>{{/data}}</tbody></table>";
+		Mustache.parse(template);
+		var output = Mustache.render(template, {data: data});
+		$("#content").html(output);
+	});// no error handling
+}
+
+/**
+ * Creates a list of all books using a Mustache-template.
+ */
+var listDiscs = function() {
+	$.ajax({
+        url: '/shareit/media/discs',
+        type:'GET'
+	})
+	.done((data) => {
+		var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{title}}</td><td>{{director}}</td><td>{{barcode}}</td><td>{{fsk}}</td></tr>{{/data}}</tbody></table>";
 		Mustache.parse(template);
 		var output = Mustache.render(template, {data: data});
 		$("#content").html(output);
