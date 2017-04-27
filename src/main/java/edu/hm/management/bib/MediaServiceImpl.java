@@ -15,8 +15,20 @@ public class MediaServiceImpl implements IMediaService {
 
 	@Override
 	public MediaServiceResult addBook(Book book) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!Book.books.contains(book))  {
+			boolean isbnexist = false;
+			for(Book bk : Book.books)  {
+				if(bk.getIsbn().equals(book.getIsbn()))  {
+					isbnexist = true;
+					break;
+				}
+			}
+			if(!isbnexist)  {
+				Book.books.add(book);
+				return MediaServiceResult.OKAY;
+			}
+		}
+		return MediaServiceResult.BADREQUEST;
 	}
 
 	@Override

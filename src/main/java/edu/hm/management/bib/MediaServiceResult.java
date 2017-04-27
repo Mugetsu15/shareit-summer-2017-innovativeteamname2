@@ -1,29 +1,41 @@
 package edu.hm.management.bib;
 
+import javax.ws.rs.core.Response;
+
 public enum MediaServiceResult {
 	
-	OKAY(200), FORBIDDEN(403), NOTFOUND(404), INTERNALSERVERERROR(500);
+	OKAY(Response.Status.OK.getStatusCode(), "Okay."),
+	FORBIDDEN(Response.Status.FORBIDDEN.getStatusCode(), "Forbidden."),
+	NOTFOUND(Response.Status.NOT_FOUND.getStatusCode(), "Not Found"),
+	INTERNALSERVERERROR(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Internal Server Error"),
+	BADREQUEST(Response.Status.BAD_REQUEST.getStatusCode(), "Bad Request");
 	
 	private final int errorCode;
+	private final String errorNote;
 	
 	/**
 	 * Constructor for ErrorCode Handling.
 	 * @param code
 	 */
-	MediaServiceResult(int code)  {
+	MediaServiceResult(int code, String note)  {
 		errorCode = code;
+		errorNote = note;
 	}
 	
 	/**
 	 * Returns the Error Code for a Response.
 	 * @return
 	 */
-	int getCode()  {
+	public int getCode()  {
 		return errorCode;
 	}
 	
+	public String getNote()  {
+		return errorNote;
+	}
+	
 	String getStatus()  {
-		return String.format("Status-Code: %d", errorCode);
+		return String.format("Status-Code: %d - %s", errorCode, errorNote);
 	}
 	
 }

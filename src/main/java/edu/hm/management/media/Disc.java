@@ -1,5 +1,8 @@
 package edu.hm.management.media;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class represents a Disc Object which has a barcode, a director and a fsk.
  * @author Daniel Gabl
@@ -23,9 +26,14 @@ public class Disc extends Medium {
 	private final int fsk;
 	
 	/**
+	 * List to save all Discs.
+	 */
+	public static List<Disc> discs = new ArrayList<>();
+	
+	/**
 	 * Default-Constructor for a Disc Object, only for Jackson.
 	 */
-	Disc() {
+	private Disc() {
 		this("0", "John Doe", 0, null);
 	}
 	
@@ -41,13 +49,15 @@ public class Disc extends Medium {
 		this.barcode = barcode;
 		this.director = director;
 		this.fsk = fsk;
+		
+		//discs.add(this);
 	}
 	
 	/**
 	 * Getter for the Barcode of a Disc.
 	 * @return barcode of this disc.
 	 */
-	String getBarcode()  {
+	public String getBarcode()  {
 		return barcode;
 	}
 	
@@ -55,7 +65,7 @@ public class Disc extends Medium {
 	 * Getter for the Director of a Disc.
 	 * @return director of a disc.
 	 */
-	String getDirector()  {
+	public String getDirector()  {
 		return director;
 	}
 	
@@ -63,7 +73,7 @@ public class Disc extends Medium {
 	 * Getter for the Age-Restriction of a Disc.
 	 * @return age restriction of a disc.
 	 */
-	int getFsk()  {
+	public int getFsk()  {
 		return fsk;
 	}
 	

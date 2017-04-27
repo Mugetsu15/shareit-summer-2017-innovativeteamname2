@@ -31,7 +31,7 @@ public class Copy {
 	 * Getter for the Medium.
 	 * @return medium.
 	 */
-	Medium getMedium()  {
+	public Medium getMedium()  {
 		return medium;
 	}
 	
@@ -39,7 +39,7 @@ public class Copy {
 	 * Getter for the Username.
 	 * @return username.
 	 */
-	String getUsername()  {
+	public String getUsername()  {
 		return owner;
 	}
 

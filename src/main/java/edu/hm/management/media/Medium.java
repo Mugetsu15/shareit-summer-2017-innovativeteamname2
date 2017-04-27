@@ -24,7 +24,7 @@ public class Medium {
 	 * Getter for the Title of this Medium.
 	 * @return title of medium.
 	 */
-	String getTitle()  {
+	public String getTitle()  {
 		return title;
 	}
 	

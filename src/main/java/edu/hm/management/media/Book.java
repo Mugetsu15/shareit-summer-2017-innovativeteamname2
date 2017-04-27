@@ -1,5 +1,8 @@
 package edu.hm.management.media;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class represents a Book Object which has an author and an isbn.
  * @author Daniel Gabl
@@ -24,6 +27,11 @@ public class Book extends Medium {
 	}
 	
 	/**
+	 * List to save all Books.
+	 */
+	public static List<Book> books = new ArrayList<>();
+	
+	/**
 	 * Extended Constructor for a Book Object.
 	 * @param author Author of the Book.
 	 * @param isbn ID of the Book.
@@ -32,13 +40,16 @@ public class Book extends Medium {
 		super(title);
 		this.author = author;
 		this.isbn = isbn;
+		
+		// Erzeugtes Element in Liste speichern.
+		//books.add(this);
 	}
 	
 	/**
 	 * Getter for the Author of the Book.
 	 * @return author of book.
 	 */
-	String getAuthor()  {
+	public String getAuthor()  {
 		return author;
 	}
 	
@@ -46,7 +57,7 @@ public class Book extends Medium {
 	 * Getter for ID of the Book.
 	 * @return id of book.
 	 */
-	String getIsbn()  {
+	public String getIsbn()  {
 		return isbn;
 	}
 	
