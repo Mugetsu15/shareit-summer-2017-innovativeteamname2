@@ -44,7 +44,7 @@ public class Disc extends Medium {
 	 * @param fsk Age-Restriction of a Disc
 	 * @param title Title of this Disc
 	 */
-	Disc(String barcode, String director, int fsk, String title)  {
+	public Disc(String barcode, String director, int fsk, String title)  {
 		super(title);
 		this.barcode = barcode;
 		this.director = director;

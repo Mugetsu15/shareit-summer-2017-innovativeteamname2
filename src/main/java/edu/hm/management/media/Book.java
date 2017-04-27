@@ -36,7 +36,7 @@ public class Book extends Medium {
 	 * @param author Author of the Book.
 	 * @param isbn ID of the Book.
 	 */
-	Book(String author, String isbn, String title)  {
+	public Book(String author, String isbn, String title)  {
 		super(title);
 		this.author = author;
 		this.isbn = isbn;

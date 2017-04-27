@@ -33,32 +33,94 @@ public class MediaServiceImpl implements IMediaService {
 
 	@Override
 	public MediaServiceResult addDisc(Disc disc) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!Disc.discs.contains(disc))  {
+			boolean barcodeexists = false;
+			for(Disc ds : Disc.discs)  {
+				if(ds.getBarcode().equals(disc.getBarcode()))  {
+					barcodeexists = true;
+					break;
+				}
+			}
+			if(!barcodeexists)  {
+				Disc.discs.add(disc);
+				return MediaServiceResult.OKAY;
+			}
+		}
+		return MediaServiceResult.BADREQUEST;
 	}
 
 	@Override
 	public Medium[] getBooks() {
-		// TODO Auto-generated method stub
-		return null;
+		Medium[] media = new Medium[Book.books.size()];
+		media = Book.books.toArray(media);
+		return media;
 	}
 
 	@Override
 	public Medium[] getDiscs() {
-		// TODO Auto-generated method stub
-		return null;
+		Medium[] media = new Medium[Disc.discs.size()];
+		media = Disc.discs.toArray(media);
+		return media;
 	}
 
 	@Override
 	public MediaServiceResult updateBook(Book book) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!Book.books.contains(book))  {
+			for(int c = 0; c < Book.books.size(); c++)  {
+				Book bk = Book.books.get(c);
+				if(bk.getIsbn().equals(book.getIsbn()))  {
+					Book.books.remove(c);
+					
+					String title = bk.getTitle();
+					String author = bk.getAuthor();
+					
+					if(!bk.getAuthor().equals(book.getAuthor()))  {
+						author = book.getAuthor();
+					}
+					if(!bk.getTitle().equals(book.getTitle()))  {
+						title = book.getTitle();
+					}
+					
+					Book newbook = new Book(author, book.getIsbn(), title);
+					Book.books.add(newbook);
+					
+					return MediaServiceResult.OKAY;
+				}
+			}
+		}
+		return MediaServiceResult.BADREQUEST;
 	}
 
 	@Override
 	public MediaServiceResult updateDisc(Disc disc) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!Disc.discs.contains(disc))  {
+			for(int c = 0; c < Disc.discs.size(); c++)  {
+				Disc ds = Disc.discs.get(c);
+				if(ds.getBarcode().equals(disc.getBarcode()))  {
+					Disc.discs.remove(c);
+					
+					String director = ds.getDirector();
+					int fsk = ds.getFsk();
+					String title = ds.getTitle();
+					
+					if(!ds.getDirector().equals(disc.getDirector()))  {
+						director = disc.getDirector();
+					}
+					if(ds.getFsk() != disc.getFsk())  {
+						fsk = disc.getFsk();
+					}
+					if(!ds.getTitle().equals(disc.getTitle()))  {
+						title = disc.getTitle();
+					}
+					
+					Disc newdisc = new Disc(director, disc.getBarcode(), fsk, title);
+					Disc.discs.add(newdisc);
+					
+					return MediaServiceResult.OKAY;
+				}
+			}
+		}
+		return MediaServiceResult.BADREQUEST;
 	}
 	
 	
