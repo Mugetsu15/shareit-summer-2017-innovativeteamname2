@@ -22,7 +22,7 @@ public class Copy {
 	 * @param owner Owner of the Copy.
 	 * @param medium Medium which was lend.
 	 */
-	Copy(String owner, Medium medium)  {
+	public Copy(String owner, Medium medium)  {
 		this.owner = owner;
 		this.medium = medium;
 	}
