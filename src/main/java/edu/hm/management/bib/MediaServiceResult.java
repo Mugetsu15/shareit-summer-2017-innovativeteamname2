@@ -8,7 +8,8 @@ public enum MediaServiceResult {
 	FORBIDDEN(Response.Status.FORBIDDEN.getStatusCode(), "Forbidden."),
 	NOTFOUND(Response.Status.NOT_FOUND.getStatusCode(), "Not Found"),
 	INTERNALSERVERERROR(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Internal Server Error"),
-	BADREQUEST(Response.Status.BAD_REQUEST.getStatusCode(), "Bad Request");
+	BADREQUEST(Response.Status.BAD_REQUEST.getStatusCode(), "Bad Request"),
+	DUPLICATE(Response.Status.BAD_REQUEST.getStatusCode(), "Already existing");
 	
 	private final int errorCode;
 	private final String errorNote;
