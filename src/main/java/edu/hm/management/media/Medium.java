@@ -16,7 +16,7 @@ public class Medium {
 	 * Constructor for a Medium Object.
 	 * @param title Title of Medium
 	 */
-	Medium(String title)  {
+	public Medium(String title)  {
 		this.title = title;
 	}
 	
