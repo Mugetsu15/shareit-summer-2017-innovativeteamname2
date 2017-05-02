@@ -63,17 +63,40 @@ public class Book extends Medium {
 	
 	@Override
 	public String toString()  {
-		return String.format("This Book is called '%s', has the ID '' and was written by '%s'", super.getTitle(), isbn, author);
+		return String.format("This Book is called '%s', has the ISBN '%s' and was written by '%s'", super.getTitle(), isbn, author);
 	}
 	
 	@Override
-	public int hashCode()  {
-		return super.hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj)  {
-		return super.equals(obj);
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
+		result = prime * result + ((isbn == null) ? 0 : isbn.hashCode());
+		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(super.equals(obj))  {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Book other = (Book) obj;
+			if (author == null) {
+				if (other.author != null)
+					return false;
+			} else if (!author.equals(other.author))
+				return false;
+			if (isbn == null) {
+				if (other.isbn != null)
+					return false;
+			} else if (!isbn.equals(other.isbn))
+				return false;
+			return true;
+		}
+		return false;
+	}
 }
