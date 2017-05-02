@@ -59,26 +59,29 @@ public class MediaServiceImpl implements IMediaService {
 
 	@Override
 	public MediaServiceResult addBook(Book book) {
-		if(!Book.books.contains(book))  {
-			boolean isbnExist = false;
-			for(Book bk : Book.books)  {
-				if(bk.getIsbn().replace("-", "").equals(book.getIsbn().replace("-", "")))  {
-					isbnExist = true;
-					break;
+		if (!book.getAuthor().isEmpty() && !book.getIsbn().isEmpty() && !book.getTitle().isEmpty()) {
+			if(!Book.books.contains(book))  {
+				boolean isbnExist = false;
+				for(Book bk : Book.books)  {
+					if(bk.getIsbn().replace("-", "").equals(book.getIsbn().replace("-", "")))  {
+						isbnExist = true;
+						break;
+					}
 				}
-			}
-			if(!isbnExist)  {
-				if(checkISBN13(book.getIsbn()))  {
-					Book.books.add(book);
-					return MediaServiceResult.OKAY;
+				if(!isbnExist)  {
+					if(checkISBN13(book.getIsbn()))  {
+						Book.books.add(book);
+						return MediaServiceResult.OKAY;
+					}  else  {
+						return MediaServiceResult.ISBNBROKEN;
+					}
 				}  else  {
-					return MediaServiceResult.ISBNBROKEN;
+					return MediaServiceResult.DUPLICATEISBN;
 				}
-			}  else  {
-				return MediaServiceResult.DUPLICATEISBN;
 			}
+			return MediaServiceResult.DUPLICATEOBJ;
 		}
-		return MediaServiceResult.DUPLICATEOBJ;
+		return MediaServiceResult.BADREQUEST;
 	}
 
 	@Override

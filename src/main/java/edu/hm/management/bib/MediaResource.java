@@ -57,8 +57,7 @@ public class MediaResource {
 		json.put("detail", result.getNote());	
 		
 		System.out.println(book);
-		System.out.println("JSON Answer:\n" + json.toString());
-		return Response.status(result.getCode()).entity(json).build();
+		return Response.status(result.getCode()).entity(json.toString()).build(); // toString, else not serializable
 	}
 	
 	/**
@@ -96,7 +95,7 @@ public class MediaResource {
 		
 		System.out.println(disc);
 		System.out.println("JSON Answer:\n" + json.toString());
-		return Response.status(result.getCode()).entity(json).build();
+		return Response.status(result.getCode()).entity(json.toString()).build();
 	}
 	
 	/**

@@ -26,17 +26,25 @@ public enum MediaServiceResult {
 	}
 	
 	/**
-	 * Returns the Error Code for a Response.
-	 * @return
+	 * Returns the Status Code for a Response.
+	 * @return status code
 	 */
 	public int getCode()  {
 		return errorCode;
 	}
 	
+	/**
+	 * Returns the Description of an error code of a response.
+	 * @return an status description
+	 */
 	public String getNote()  {
 		return errorNote;
 	}
 	
+	/**
+	 * Returns a String containing the Status Code and its description.
+	 * @return status code and status description
+	 */
 	String getStatus()  {
 		return String.format("Status-Code: %d - %s", errorCode, errorNote);
 	}
