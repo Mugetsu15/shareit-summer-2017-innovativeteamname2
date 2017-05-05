@@ -45,4 +45,16 @@ public interface IMediaService {
 	 * @return
 	 */
 	MediaServiceResult updateDisc(Disc disc);
+	
+	/**
+	 * Returns a Book of our Service routine.
+	 * @return a Book of our Service routine.
+	 */
+	Book findBook(String isbn);
+	
+	/**
+	 * Returns a Disc of our Service routine.
+	 * @return a Disc of our Service routine.
+	 */
+	Disc findDisc(String barcode);
 }

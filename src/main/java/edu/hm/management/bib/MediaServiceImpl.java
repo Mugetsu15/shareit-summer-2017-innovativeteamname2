@@ -10,7 +10,19 @@ public class MediaServiceImpl implements IMediaService {
 	 * Default Constructor, only for Jackson
 	 */
 	public MediaServiceImpl()  {
-		
+			Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
+			Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
+			Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
+			
+            Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", 12, "Title-909-4");
+            Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", 18, "Title-9462-6");
+			
+            addBook(bk1);
+            addBook(bk2);
+            addBook(bk3);
+            
+            addDisc(ds1);
+            addDisc(ds2);
 	}
 	
 	/**
@@ -86,38 +98,41 @@ public class MediaServiceImpl implements IMediaService {
 
 	@Override
 	public MediaServiceResult addDisc(Disc disc) {
-		if(!Disc.discs.contains(disc))  {
-			boolean barcodeExists = false;
-			for(Disc ds : Disc.discs)  {
-				if(ds.getBarcode().replace("-", "").equals(disc.getBarcode().replace("-", "")))  {
-					barcodeExists = true;
-					break;
+		if (!disc.getDirector().isEmpty() && !disc.getBarcode().isEmpty() && !disc.getTitle().isEmpty()) {
+			if(!Disc.discs.contains(disc))  {
+				boolean barcodeExists = false;
+				for(Disc ds : Disc.discs)  {
+					if(ds.getBarcode().replace("-", "").equals(disc.getBarcode().replace("-", "")))  {
+						barcodeExists = true;
+						break;
+					}
 				}
-			}
-			if(!barcodeExists)  {
-				if(checkISBN13(disc.getBarcode()))  {
-					Disc.discs.add(disc);
-					return MediaServiceResult.OKAY;
+				if(!barcodeExists)  {
+					if(checkISBN13(disc.getBarcode()))  {
+						Disc.discs.add(disc);
+						return MediaServiceResult.OKAY;
+					}  else  {
+						return MediaServiceResult.ISBNBROKEN;
+					}
 				}  else  {
-					return MediaServiceResult.ISBNBROKEN;
+					return MediaServiceResult.DUPLICATEISBN;
 				}
-			}  else  {
-				return MediaServiceResult.DUPLICATEISBN;
 			}
+			return MediaServiceResult.DUPLICATEOBJ;
 		}
-		return MediaServiceResult.DUPLICATEOBJ;
+		return MediaServiceResult.BADREQUEST;
 	}
 
 	@Override
 	public Medium[] getBooks() {
-		Medium[] media = new Medium[Book.books.size()];
+		Book[] media = new Book[Book.books.size()];
 		media = Book.books.toArray(media);
 		return media;
 	}
 
 	@Override
 	public Medium[] getDiscs() {
-		Medium[] media = new Medium[Disc.discs.size()];
+		Disc[] media = new Disc[Disc.discs.size()];
 		media = Disc.discs.toArray(media);
 		return media;
 	}
@@ -133,21 +148,25 @@ public class MediaServiceImpl implements IMediaService {
 					String title = bk.getTitle();
 					String author = bk.getAuthor();
 					
-					if(!bk.getAuthor().equals(book.getAuthor()))  {
+					if(!bk.getAuthor().equals(book.getAuthor()) && !book.getAuthor().isEmpty())  {
 						author = book.getAuthor();
 					}
-					if(!bk.getTitle().equals(book.getTitle()))  {
+					if(!bk.getTitle().equals(book.getTitle()) && !book.getTitle().isEmpty())  {
 						title = book.getTitle();
 					}
 					
-					Book newbook = new Book(author, book.getIsbn(), title);
-					Book.books.add(newbook);
+					MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
 					
-					return MediaServiceResult.OKAY;
+					if(!bk.getIsbn().equals(book.getIsbn()))  {
+						Book newbook = new Book(author, book.getIsbn(), title);
+						result = addBook(newbook);
+					}
+					
+					return result;
 				}
 			}
 		}
-		return MediaServiceResult.BADREQUEST;
+		return MediaServiceResult.ISBNNOTFOUND;
 	}
 
 	@Override
@@ -162,24 +181,47 @@ public class MediaServiceImpl implements IMediaService {
 					int fsk = ds.getFsk();
 					String title = ds.getTitle();
 					
-					if(!ds.getDirector().equals(disc.getDirector()))  {
+					if(!ds.getDirector().equals(disc.getDirector()) && !disc.getDirector().isEmpty())  {
 						director = disc.getDirector();
 					}
-					if(ds.getFsk() != disc.getFsk())  {
+					if(ds.getFsk() != disc.getFsk() && disc.getFsk() != 0)  {
 						fsk = disc.getFsk();
 					}
-					if(!ds.getTitle().equals(disc.getTitle()))  {
+					if(!ds.getTitle().equals(disc.getTitle()) && !disc.getTitle().isEmpty())  {
 						title = disc.getTitle();
 					}
 					
-					Disc newdisc = new Disc(director, disc.getBarcode(), fsk, title);
-					Disc.discs.add(newdisc);
+					MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
+					if(!ds.getBarcode().equals(disc.getBarcode()))  {
+						Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
+						result = addDisc(newdisc);
+					}
 					
-					return MediaServiceResult.OKAY;
+					return result;
 				}
 			}
 		}
-		return MediaServiceResult.BADREQUEST;
+		return MediaServiceResult.ISBNNOTFOUND;
+	}
+
+	@Override
+	public Book findBook(String isbn) {
+		for (Book bk : Book.books)  {
+			if(bk.getIsbn().equals(isbn))  {
+				return bk;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Disc findDisc(String barcode) {
+		for (Disc ds : Disc.discs)  {
+			if(ds.getBarcode().equals(barcode))  {
+				return ds;
+			}
+		}
+		return null;
 	}
 	
 	

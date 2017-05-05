@@ -10,8 +10,9 @@ public enum MediaServiceResult {
 	INTERNALSERVERERROR(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Internal Server Error"),
 	BADREQUEST(Response.Status.BAD_REQUEST.getStatusCode(), "Bad Request"),
 	DUPLICATEOBJ(Response.Status.BAD_REQUEST.getStatusCode(), "Object already existing"),
-	DUPLICATEISBN(Response.Status.BAD_REQUEST.getStatusCode(), "ISBN already existing"),
-	ISBNBROKEN(Response.Status.BAD_REQUEST.getStatusCode(), "ISBN is not valid");
+	DUPLICATEISBN(Response.Status.BAD_REQUEST.getStatusCode(), "ISBN already exists"),
+	ISBNBROKEN(Response.Status.BAD_REQUEST.getStatusCode(), "ISBN is not valid"),
+	ISBNNOTFOUND(Response.Status.BAD_REQUEST.getStatusCode(), "ISBN was not found");
 	
 	private final int errorCode;
 	private final String errorNote;
