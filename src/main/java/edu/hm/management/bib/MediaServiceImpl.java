@@ -175,8 +175,15 @@ public class MediaServiceImpl implements IMediaService {
     }
 
     @Override
-    public MediaServiceResult updateBook(Book book) {
-        if (!books.contains(book))  {
+    public MediaServiceResult updateBook(Book book)  {
+        boolean isbnInList = false;
+        //for (Book bk : books)  {
+        //    if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
+        //        isbnInList = true;
+        //    }
+        //}
+        if (isbnInList)  {
+            System.out.println("Book " + book.toString() + "not containing in List");
             for (int c = 0; c < books.size(); c++)  {
                 Book bk = books.get(c);
                 if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
@@ -232,12 +239,11 @@ public class MediaServiceImpl implements IMediaService {
                         Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
                         result = addDisc(newdisc);
                     }
-                    System.out.println(result.toString());
                     return result;
                 }
             }
         }
-        return MediaServiceResult.ISBNNOTFOUND;
+        return MediaServiceResult.DUPLICATEOBJ;
     }
 
     @Override
