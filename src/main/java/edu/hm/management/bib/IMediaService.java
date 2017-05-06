@@ -50,11 +50,11 @@ public interface IMediaService {
 	 * Returns a Book of our Service routine.
 	 * @return a Book of our Service routine.
 	 */
-	Book findBook(String isbn);
+	Medium findBook(String isbn);
 	
 	/**
 	 * Returns a Disc of our Service routine.
 	 * @return a Disc of our Service routine.
 	 */
-	Disc findDisc(String barcode);
+	Medium findDisc(String barcode);
 }

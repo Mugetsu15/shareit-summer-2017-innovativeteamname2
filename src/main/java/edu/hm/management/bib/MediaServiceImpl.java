@@ -16,6 +16,7 @@ public class MediaServiceImpl implements IMediaService {
 			
             Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", 12, "Title-909-4");
             Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", 18, "Title-9462-6");
+            Disc ds3 = new Disc("8-88837-34272-8", "James Arthur", 0, "Impossible");
 			
             addBook(bk1);
             addBook(bk2);
@@ -23,6 +24,7 @@ public class MediaServiceImpl implements IMediaService {
             
             addDisc(ds1);
             addDisc(ds2);
+            addDisc(ds3);
 	}
 	
 	/**
@@ -34,6 +36,7 @@ public class MediaServiceImpl implements IMediaService {
 		boolean flag = false;
 		
 		isbn = isbn.replace("-", "");
+		isbn = isbn.replace(" ", "");
 		
 		int sum = 0;
 		try  {
@@ -68,6 +71,18 @@ public class MediaServiceImpl implements IMediaService {
 
 		return flag;
 	}
+	
+	/**
+	 * Removes all spaces and minus from the given String.
+	 * @param isbn ISBN number to clean
+	 * @return cleaned ISBN
+	 */
+	private String cleanISBN(String isbn)  {
+		isbn = isbn.replace("-", "");
+		isbn = isbn.replace(" ", "");
+		
+		return isbn;
+	}
 
 	@Override
 	public MediaServiceResult addBook(Book book) {
@@ -75,7 +90,7 @@ public class MediaServiceImpl implements IMediaService {
 			if(!Book.books.contains(book))  {
 				boolean isbnExist = false;
 				for(Book bk : Book.books)  {
-					if(bk.getIsbn().replace("-", "").equals(book.getIsbn().replace("-", "")))  {
+					if(cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
 						isbnExist = true;
 						break;
 					}
@@ -102,7 +117,7 @@ public class MediaServiceImpl implements IMediaService {
 			if(!Disc.discs.contains(disc))  {
 				boolean barcodeExists = false;
 				for(Disc ds : Disc.discs)  {
-					if(ds.getBarcode().replace("-", "").equals(disc.getBarcode().replace("-", "")))  {
+					if(cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
 						barcodeExists = true;
 						break;
 					}
@@ -142,9 +157,7 @@ public class MediaServiceImpl implements IMediaService {
 		if(!Book.books.contains(book))  {
 			for(int c = 0; c < Book.books.size(); c++)  {
 				Book bk = Book.books.get(c);
-				if(bk.getIsbn().equals(book.getIsbn()))  {
-					Book.books.remove(c);
-					
+				if(cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
 					String title = bk.getTitle();
 					String author = bk.getAuthor();
 					
@@ -157,7 +170,8 @@ public class MediaServiceImpl implements IMediaService {
 					
 					MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
 					
-					if(!bk.getIsbn().equals(book.getIsbn()))  {
+					if(!cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
+						Book.books.remove(c);
 						Book newbook = new Book(author, book.getIsbn(), title);
 						result = addBook(newbook);
 					}
@@ -174,9 +188,7 @@ public class MediaServiceImpl implements IMediaService {
 		if(!Disc.discs.contains(disc))  {
 			for(int c = 0; c < Disc.discs.size(); c++)  {
 				Disc ds = Disc.discs.get(c);
-				if(ds.getBarcode().equals(disc.getBarcode()))  {
-					Disc.discs.remove(c);
-					
+				if(cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
 					String director = ds.getDirector();
 					int fsk = ds.getFsk();
 					String title = ds.getTitle();
@@ -192,7 +204,8 @@ public class MediaServiceImpl implements IMediaService {
 					}
 					
 					MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
-					if(!ds.getBarcode().equals(disc.getBarcode()))  {
+					if(!cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
+						Disc.discs.remove(c);
 						Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
 						result = addDisc(newdisc);
 					}
@@ -205,9 +218,9 @@ public class MediaServiceImpl implements IMediaService {
 	}
 
 	@Override
-	public Book findBook(String isbn) {
+	public Medium findBook(String isbn) {
 		for (Book bk : Book.books)  {
-			if(bk.getIsbn().equals(isbn))  {
+			if(cleanISBN(bk.getIsbn()).equals(cleanISBN(isbn)))  {
 				return bk;
 			}
 		}
@@ -215,9 +228,9 @@ public class MediaServiceImpl implements IMediaService {
 	}
 
 	@Override
-	public Disc findDisc(String barcode) {
+	public Medium findDisc(String barcode) {
 		for (Disc ds : Disc.discs)  {
-			if(ds.getBarcode().equals(barcode))  {
+			if(cleanISBN(ds.getBarcode()).equals(cleanISBN(barcode)))  {
 				return ds;
 			}
 		}
