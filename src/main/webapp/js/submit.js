@@ -114,7 +114,7 @@ var updateBook = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/books/'+$("input[name=isbn]").val(),
+        url: '/shareit/media/books/',
         type:'PUT',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -147,7 +147,7 @@ var updateDisc = function() {
 	});
 	var errorText = $("#errormessage");
 	$.ajax({
-        url: '/shareit/media/discs/'+$("input[name=barcode]").val(),
+        url: '/shareit/media/discs/',
 	    type:'PUT',
 	    contentType: 'application/json; charset=UTF-8',
         data: json

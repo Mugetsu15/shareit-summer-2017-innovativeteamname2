@@ -190,9 +190,9 @@ public class MediaServiceImpl implements IMediaService {
                         title = book.getTitle();
                     }
                     
-                    MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
+                    MediaServiceResult result = MediaServiceResult.BADREQUEST;
                     
-                    if (!cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
+                    if (!title.equals(bk.getTitle()) || !author.equals(bk.getAuthor()))  {  // Data was modified
                         books.remove(c);
                         Book newbook = new Book(author, book.getIsbn(), title);
                         result = addBook(newbook);
@@ -225,13 +225,14 @@ public class MediaServiceImpl implements IMediaService {
                         title = disc.getTitle();
                     }
                     
-                    MediaServiceResult result = MediaServiceResult.DUPLICATEOBJ;
-                    if (!cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
+                    MediaServiceResult result = MediaServiceResult.BADREQUEST;
+                    
+                    if (!director.equals(ds.getDirector()) || fsk != ds.getFsk() || !title.equals(ds.getTitle()))  {  // Data was modified
                         discs.remove(c);
                         Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
                         result = addDisc(newdisc);
                     }
-                    
+                    System.out.println(result.toString());
                     return result;
                 }
             }
