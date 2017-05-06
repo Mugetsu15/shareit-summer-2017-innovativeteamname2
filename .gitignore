@@ -5,6 +5,7 @@
 .idea/
 
 # Folders
+bin
 target
 
 # Mobile Tools for Java (J2ME)
