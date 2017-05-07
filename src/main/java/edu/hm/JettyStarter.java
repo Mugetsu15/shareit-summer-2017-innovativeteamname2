@@ -1,5 +1,7 @@
 package edu.hm;
 
+import java.io.IOException;
+
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.webapp.*;
 
@@ -31,6 +33,13 @@ public final class JettyStarter {
         jetty.setHandler(new WebAppContext(WEBAPP_DIR, APP_URL));
         jetty.start();
         System.out.println("Jetty listening on port " + PORT);
+        try  {
+            Runtime.getRuntime().exec(
+                "rundll32 url.dll,FileProtocolHandler "
+                        + "http://localhost:" + PORT);
+        } catch (IOException ex) {
+            System.err.println("Failed opening address in Browser.");
+        }
         jetty.join();
     }
 }
