@@ -16,16 +16,16 @@ public enum Fsk {
     private final int fskLevel;
     
     /**
-     * Constructor for ErrorCode Handling.
-     * @param fsk Code of Result (e. g. 200, 404, etc.)
+     * Constructor for Fsk Level.
+     * @param fsk Fsk Level (e. g. 0, 16, etc.)
      */
     Fsk(int fsk)  {
         fskLevel = fsk;
     }
     
     /**
-     * Returns the Status Code for a Response.
-     * @return status code
+     * Returns the Fsk Level.
+     * @return fsk level
      */
     public int getFsk()  {
         return fskLevel;
