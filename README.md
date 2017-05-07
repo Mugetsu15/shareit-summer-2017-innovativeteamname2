@@ -2,8 +2,7 @@
 
 Developer: Gabl, Daniel<br />
 Deployment: [Heroku](https://innovative-teamname.herokuapp.com/) (not working yet)<br />
-Project Status: 99%<br />
-ToDo: Just jUnit-Tests for MediaResource
+Project Status: 100%<br />
 
 
 URI-Template|Verb|Wirkung
@@ -18,3 +17,16 @@ URI-Template|Verb|Wirkung
 /media/discs|GET|Alle Discs auflisten
 /media/discs/{barcode}|GET|Eine JSON-Repräsentation einer gespeicherten Disc liefern, falls vorhanden
 /media/discs|PUT|Daten modifizieren (automatische Prüfung ob Barcode in Service-Routine existiert)<br />Möglicher Fehler: Barcode nicht gefunden<br />Möglicher Fehler: Director, FSK und Titel fehlen<br />Möglicher Fehler: Neue Daten entsprechen den alten Daten
+
+
+Object|Parameter|Input
+ -|-|-
+**Bücher**| | 
+ &nbsp;|author|String
+ &nbsp;|isbn|String
+ &nbsp;|title|String
+**Discs**| |
+ &nbsp;|barcode|String
+ &nbsp;|director|String
+ &nbsp;|fsk|Integer
+ &nbsp;|title|String
