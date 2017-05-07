@@ -277,7 +277,7 @@ public class MediaServiceTest {
         Assert.assertEquals(discJSON, expected);
         
         
-        // correct ISBN
+        // correct barcode
         Medium correct = service.findDisc(ds1.getBarcode());
         discJSON = objToJSON(correct);
         expected = "{\"title\":\"New Title\",\"barcode\":\"978-3864250101\",\"director\":\"New Director\",\"fsk\":18}";
