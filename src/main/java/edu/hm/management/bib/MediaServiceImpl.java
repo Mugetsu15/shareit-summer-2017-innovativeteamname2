@@ -25,6 +25,14 @@ public class MediaServiceImpl implements IMediaService {
     private static List<Disc> discs = new ArrayList<>();
     
     /**
+     * Method to clear the Library.
+     */
+    public void clearLibary()  {
+        books.clear();
+        discs.clear();
+    }
+    
+    /**
      * Default Constructor, only for Jackson.
      */
     public MediaServiceImpl()  {
