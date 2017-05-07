@@ -1,8 +1,7 @@
 package edu.hm;
 
-import static org.junit.Assert.*;
 import org.junit.Assert;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
+import edu.hm.management.bib.MediaResource;
 import edu.hm.management.bib.MediaServiceImpl;
 import edu.hm.management.bib.MediaServiceResult;
 import edu.hm.management.media.Book;
@@ -26,14 +26,26 @@ public class MediaServiceTest {
     /**
      * Media Interface.
      */
-    private final IMediaService service = new MediaServiceImpl();
+    private IMediaService service = new MediaServiceImpl();
+    private MediaResource resource = new MediaResource();
     
     private Book bk1 = new Book("Richard Castle", "978-3864250101", "Frozen Heat");
     private Book bk2 = new Book("Rick Castle", "978-3864252969", "Deadly Heat");
 
     private Disc ds1 = new Disc("978-3864250101", "Director-Frozen", Fsk.FSK16.getFsk(), "Title-Frozen");
     private Disc ds2 = new Disc("978-3864252969", "Director-Deadly", Fsk.FSK12.getFsk(), "Title-Deadly");
-
+    
+    /**
+     * Deleting the List each time. Simulating Jackson Behavior.
+     * @throws Exception in case of failure
+     */
+    @Before
+    public void setUp() throws Exception {
+        service.clearLibary();
+        service = new MediaServiceImpl();
+        resource = new MediaResource(service);
+    }
+    
     /**
      * Tests on addBook.
      * Möglicher Fehler: Ungültige ISBN
@@ -46,39 +58,39 @@ public class MediaServiceTest {
         Book isbnFalse = new Book("Hans", "isbnistfalsch", "ISBN ist falsch");
         service.updateBook(isbnFalse);
         MediaServiceResult result = service.addBook(isbnFalse);
-        assertTrue(MediaServiceResult.ISBNBROKEN.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.ISBNBROKEN.getNote(), result.getNote());
         
         Book isbnFalse2 = new Book("Hans", "987-3864252969", "978 -> 987");
         result = service.addBook(isbnFalse2);
-        assertTrue(MediaServiceResult.ISBNBROKEN.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.ISBNBROKEN.getNote(), result.getNote());
         
         // Author / Title missing
         Book missingAuthor = new Book("", bk1.getIsbn(), "Autor fehlt");
         result = service.addBook(missingAuthor);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         Book missingTitle = new Book("Titel fehlt", bk1.getIsbn(), "");
         result = service.addBook(missingTitle);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Default Case
         result = service.addBook(bk1);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         result = service.addBook(bk2);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         Book newbook = new Book("Das Restaurant am Ende des Universums", "978-3-86631-007-0", "Adams Douglas");
         result = service.addBook(newbook);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Book already exists
         result = service.addBook(bk2);
-        assertFalse(MediaServiceResult.OKAY.getNote() == result.getNote());
-        assertTrue(MediaServiceResult.DUPLICATEOBJ.getNote() == result.getNote());
+        Assert.assertNotEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
+        Assert.assertEquals(MediaServiceResult.DUPLICATEOBJ.getNote(), result.getNote());
         
         // ISBN exists
         Book isbnDuplicate = new Book("Not Richard Castle", bk1.getIsbn(), "Not Frozen Heat");
         result = service.addBook(isbnDuplicate);
-        assertTrue(MediaServiceResult.DUPLICATEISBN.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.DUPLICATEISBN.getNote(), result.getNote());
     }
     
     /**
@@ -92,37 +104,37 @@ public class MediaServiceTest {
         // All missing wrong
         Disc allMissing = new Disc("", "", Fsk.FSK0.getFsk(), "");
         MediaServiceResult result = service.addDisc(allMissing);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Barcode wrong
         Disc barcodeFalse = new Disc("8-88837-34272-8", "James Arthur", Fsk.FSK0.getFsk(), "Impossible");
         result = service.addDisc(barcodeFalse);
-        assertTrue(MediaServiceResult.ISBNBROKEN.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.ISBNBROKEN.getNote(), result.getNote());
         
         // Director / Title missing
         Disc missingDirector = new Disc(ds1.getBarcode(), "Titel fehlt", Fsk.FSK0.getFsk(), "");
         result = service.addDisc(missingDirector);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         Disc missingTitle = new Disc(ds1.getBarcode(), "", Fsk.FSK0.getFsk(), "Director fehlt");
         result = service.addDisc(missingTitle);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Default Case
         result = service.addDisc(ds1);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         result = service.addDisc(ds2);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Disc already exists
         result = service.addDisc(ds2);
-        assertFalse(MediaServiceResult.OKAY.getNote() == result.getNote());
-        assertTrue(MediaServiceResult.DUPLICATEOBJ.getNote() == result.getNote());
+        Assert.assertNotEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
+        Assert.assertEquals(MediaServiceResult.DUPLICATEOBJ.getNote(), result.getNote());
         
         // Barcode exists
         Disc barcodeDuplicate = new Disc(ds1.getBarcode(), "Not Director-Frozen", Fsk.FSK16.getFsk(), "Not Title-Frozen");
         result = service.addDisc(barcodeDuplicate);
-        assertTrue(MediaServiceResult.DUPLICATEISBN.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.DUPLICATEISBN.getNote(), result.getNote());
     }
     
     /**
@@ -159,41 +171,43 @@ public class MediaServiceTest {
      */
     @Test
     public void testUpdateBook()  {
+        Book bk2Copy = new Book(bk2.getAuthor(), bk2.getIsbn(), bk2.getTitle());
+        MediaServiceResult result = service.addBook(bk2Copy);
+        
         // Same Object
-        Book bk1Copy = new Book(bk2.getAuthor(), bk2.getIsbn(), bk2.getTitle());
-        MediaServiceResult result = service.updateBook(bk1Copy);
-        assertFalse(MediaServiceResult.OKAY.getNote() == result.getNote());
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        result = service.updateBook(bk2Copy);
+        Assert.assertNotEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Empty Object
         Book empty = new Book("", bk2.getIsbn(), "");
         result = service.updateBook(empty);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Wrong ISBN
         Book wrongIsbn = new Book(bk1.getAuthor(), "1231312123", bk1.getTitle());
         result = service.updateBook(wrongIsbn);
-        assertTrue(MediaServiceResult.ISBNNOTFOUND.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.ISBNNOTFOUND.getNote(), result.getNote());
         
         // All correct
         Book correct = new Book(bk1.getAuthor(), bk2.getIsbn(), bk1.getTitle());
         result = service.updateBook(correct);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // New Data
         Book correct2 = new Book("New Author", bk2.getIsbn(), "New Title");
         result = service.updateBook(correct2);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Change only Author
         Book author = new Book(bk1.getAuthor(), bk2.getIsbn(), "");
         result = service.updateBook(author);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Change only Title
         Book title = new Book(bk1.getAuthor(), bk2.getIsbn(), bk1.getTitle());
         result = service.updateBook(title);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
     }
     
     /**
@@ -205,46 +219,50 @@ public class MediaServiceTest {
      */
     @Test
     public void testUpdateDisc()  {
-        // Same Object
         Disc ds1copy = new Disc(ds1.getBarcode(), ds1.getDirector(), ds1.getFsk(), ds1.getTitle());
-        MediaServiceResult result = service.updateDisc(ds1copy);
-        assertFalse(MediaServiceResult.OKAY.getNote() == result.getNote());
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Disc ds2copy = new Disc(ds2.getBarcode(), ds2.getDirector(), ds2.getFsk(), ds2.getTitle());
+        MediaServiceResult result = service.addDisc(ds1copy);
+        result = service.addDisc(ds2copy);
+         
+        // Same Object
+        result = service.updateDisc(ds1copy);
+        Assert.assertNotEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Empty Object
         Disc empty = new Disc(ds2.getBarcode(), "", -1, "");
         result = service.updateDisc(empty);
-        assertTrue(MediaServiceResult.BADREQUEST.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.BADREQUEST.getNote(), result.getNote());
         
         // Wrong ISBN
         Disc wrongBarcode = new Disc("1231312123", ds1.getDirector(), Fsk.FSK0.getFsk(), ds1.getTitle());
         result = service.updateDisc(wrongBarcode);
-        assertTrue(MediaServiceResult.ISBNNOTFOUND.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.ISBNNOTFOUND.getNote(), result.getNote());
         
         // All correct
         Disc correct = new Disc(ds1.getBarcode(), ds2.getDirector(), ds2.getFsk(), ds2.getTitle());
         result = service.updateDisc(correct);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // New Data
         Disc correct2 = new Disc(ds1.getBarcode(), "New Director", Fsk.FSK18.getFsk(), "New Title");
         result = service.updateDisc(correct2);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Change only Director
         Disc author = new Disc(ds2.getBarcode(), "New Director", ds2.getFsk(), ds2.getTitle());
         result = service.updateDisc(author);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Change only Title
         Disc title = new Disc(ds2.getBarcode(), "New Director", ds2.getFsk(), "New Title");
         result = service.updateDisc(title);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
         
         // Change only Fsk
         Disc fsk = new Disc(ds2.getBarcode(), "New Director", ds2.getFsk() + Fsk.FSK18.getFsk(), "New Title");
         result = service.updateDisc(fsk);
-        assertTrue(MediaServiceResult.OKAY.getNote() == result.getNote());
+        Assert.assertEquals(MediaServiceResult.OKAY.getNote(), result.getNote());
     }
     
     /**
@@ -252,6 +270,9 @@ public class MediaServiceTest {
      */
     @Test
     public void testFindBook()  {
+        Book bk1Copy = new Book(bk1.getAuthor(), bk1.getIsbn(), bk1.getTitle());
+        service.addBook(bk1Copy);
+        
         // wrong ISBN
         Medium wrong = service.findBook("1234567890123");
         String bookJSON = objToJSON(wrong);
@@ -270,17 +291,19 @@ public class MediaServiceTest {
      */
     @Test
     public void testFindDisc()  {
+        Disc ds1copy = new Disc(ds1.getBarcode(), ds1.getDirector(), ds1.getFsk(), ds1.getTitle());
+        service.addDisc(ds1copy);
+        
         // wrong barcode
         Medium wrong = service.findDisc("1234567890123");
         String discJSON = objToJSON(wrong);
         String expected = "null";
         Assert.assertEquals(discJSON, expected);
         
-        
         // correct barcode
         Medium correct = service.findDisc(ds1.getBarcode());
         discJSON = objToJSON(correct);
-        expected = "{\"title\":\"New Title\",\"barcode\":\"978-3864250101\",\"director\":\"New Director\",\"fsk\":18}";
+        expected = "{\"title\":\"Title-Frozen\",\"barcode\":\"978-3864250101\",\"director\":\"Director-Frozen\",\"fsk\":16}";
         Assert.assertEquals(discJSON, expected);
     }
     
