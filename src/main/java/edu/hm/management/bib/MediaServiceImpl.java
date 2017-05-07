@@ -64,7 +64,7 @@ public class MediaServiceImpl implements IMediaService {
         try  {
             for (int c = 0; c < isbnLength; c++)  {
                 int digit = Integer.parseInt(isbn.substring(c, c + 1));
-                // Zur Berechnung der Prüfziffer bei der ISBN-13 werden alle zwölf Ziffern der noch unvollständigen ISBN addiert,
+                // Zur Berechnung der PrÃ¼fziffer bei der ISBN-13 werden alle zwÃ¶lf Ziffern der noch unvollstÃ¤ndigen ISBN addiert,
                 // wobei die Ziffern mit gerader Position (also die zweite, vierte und so weiter) dreifachen Wert erhalten.
                 int mult = 1;
                 if ((c + 1) % 2 == 0)  {
@@ -73,10 +73,10 @@ public class MediaServiceImpl implements IMediaService {
                 sum += digit * mult;
             }
             
-            // Checksumme = (Die Zehnerpotenz, die größer als die Summe ist) - Summe
+            // Checksumme = (Die Zehnerpotenz, die grÃ¶ÃŸer als die Summe ist) - Summe
             int checksum = (sum / moduloFactor + 1) * moduloFactor - sum;
             
-            //Ist das Endergebnis 10, ist die Prüfziffer 0.
+            //Ist das Endergebnis 10, ist die PrÃ¼fziffer 0.
             if (checksum == moduloFactor)  {
                 checksum = 0;
             }
@@ -177,13 +177,12 @@ public class MediaServiceImpl implements IMediaService {
     @Override
     public MediaServiceResult updateBook(Book book)  {
         boolean isbnInList = false;
-        //for (Book bk : books)  {
-        //    if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
-        //        isbnInList = true;
-        //    }
-        //}
+        for (Book bk : books)  {
+            if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
+                isbnInList = true;
+            }
+        }
         if (isbnInList)  {
-            System.out.println("Book " + book.toString() + "not containing in List");
             for (int c = 0; c < books.size(); c++)  {
                 Book bk = books.get(c);
                 if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
@@ -214,18 +213,24 @@ public class MediaServiceImpl implements IMediaService {
 
     @Override
     public MediaServiceResult updateDisc(Disc disc) {
-        if (!discs.contains(disc))  {
+        boolean barcodeInList = false;
+        for (Disc ds : discs)  {
+            if (cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
+                barcodeInList = true;
+            }
+        }
+        if (barcodeInList)  {
             for (int c = 0; c < discs.size(); c++)  {
                 Disc ds = discs.get(c);
                 if (cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
                     String director = ds.getDirector();
                     int fsk = ds.getFsk();
                     String title = ds.getTitle();
-                    
+                                       
                     if (!ds.getDirector().equals(disc.getDirector()) && !disc.getDirector().isEmpty())  {
                         director = disc.getDirector();
                     }
-                    if (ds.getFsk() != disc.getFsk() && disc.getFsk() != 0)  {
+                    if (ds.getFsk() != disc.getFsk() && disc.getFsk() >= 0)  {
                         fsk = disc.getFsk();
                     }
                     if (!ds.getTitle().equals(disc.getTitle()) && !disc.getTitle().isEmpty())  {
@@ -243,7 +248,7 @@ public class MediaServiceImpl implements IMediaService {
                 }
             }
         }
-        return MediaServiceResult.DUPLICATEOBJ;
+        return MediaServiceResult.ISBNNOTFOUND;
     }
 
     @Override
