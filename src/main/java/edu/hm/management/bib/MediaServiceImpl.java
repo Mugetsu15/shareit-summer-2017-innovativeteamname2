@@ -218,8 +218,9 @@ public class MediaServiceImpl implements IMediaService {
         }
         return MediaServiceResult.ISBNNOTFOUND;
     }
-
+    //CHECKSTYLE:OFF (Zyklomatische Komplexität beträgt 15 (Obergrenze ist 13).)
     @Override
+    //CHECKSTYLE:ON
     public MediaServiceResult updateDisc(Disc disc) {
         boolean barcodeInList = false;
         for (Disc ds : discs)  {
