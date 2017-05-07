@@ -1,6 +1,7 @@
 package edu.hm;
 
 import static org.junit.Assert.*;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -134,7 +135,7 @@ public class MediaServiceTest {
         String expected = "[{\"title\":\"Title-909-4\",\"author\":\"Author-909-4\",\"isbn\":\"978-1-56619-909-4\"},"
                 + "{\"title\":\"Title-9462-6\",\"author\":\"Author-9462-6\",\"isbn\":\"978-1-4028-9462-6\"},"
                 + "{\"title\":\"Heat Wave\",\"author\":\"Richard Castle\",\"isbn\":\"978-3-8642-5007-1\"}]";
-        assertTrue(booksJSON.equals(expected));
+        Assert.assertEquals(booksJSON, expected);
     }
     
     /**
@@ -146,7 +147,7 @@ public class MediaServiceTest {
         String discsJSON = objToJSON(discs);
         String expected = "[{\"title\":\"Title-909-4\",\"barcode\":\"978-1-56619-909-4\",\"director\":\"Director-909-4\",\"fsk\":12},"
                 + "{\"title\":\"Title-9462-6\",\"barcode\":\"978-1-4028-9462-6\",\"director\":\"Director-9462-6\",\"fsk\":18}]";
-        assertTrue(discsJSON.equals(expected));
+        Assert.assertEquals(discsJSON, expected);
     }
     
     /**
@@ -255,13 +256,13 @@ public class MediaServiceTest {
         Medium wrong = service.findBook("1234567890123");
         String bookJSON = objToJSON(wrong);
         String expected = "null";
-        assertTrue(bookJSON.equals(expected));
+        Assert.assertEquals(bookJSON, expected);
         
         // correct ISBN
         Medium correct = service.findBook(bk1.getIsbn());
         bookJSON = objToJSON(correct);
         expected = "{\"title\":\"Frozen Heat\",\"author\":\"Richard Castle\",\"isbn\":\"978-3864250101\"}";
-        assertTrue(bookJSON.equals(expected));
+        Assert.assertEquals(bookJSON, expected);
     }
     
     /**
@@ -271,15 +272,16 @@ public class MediaServiceTest {
     public void testFindDisc()  {
         // wrong barcode
         Medium wrong = service.findDisc("1234567890123");
-        String bookJSON = objToJSON(wrong);
+        String discJSON = objToJSON(wrong);
         String expected = "null";
-        assertTrue(bookJSON.equals(expected));
+        Assert.assertEquals(discJSON, expected);
+        
         
         // correct ISBN
         Medium correct = service.findDisc(ds1.getBarcode());
-        bookJSON = objToJSON(correct);
+        discJSON = objToJSON(correct);
         expected = "{\"title\":\"New Title\",\"barcode\":\"978-3864250101\",\"director\":\"New Director\",\"fsk\":18}";
-        assertTrue(bookJSON.equals(expected));
+        Assert.assertEquals(discJSON, expected);
     }
     
     /**
